@@ -34,6 +34,8 @@ router.post('/signup', cors.corsWithOptions, (req, res) => {
         res.json({ err: err });
       }
       else {
+        if (req.body.display_pic)
+          user.display_pic = req.body.display_pic;
         if (req.body.firstname)
           user.firstname = req.body.firstname;
         if (req.body.lastname)

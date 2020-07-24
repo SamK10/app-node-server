@@ -18,7 +18,7 @@ postRouter.route('/')
             .then((posts) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(posts);
+                res.json(posts.reverse());
             }, (err) => next(err))
             .catch((err) => next(err));
     })

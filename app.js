@@ -17,7 +17,7 @@ var postRouter = require('./routes/postRouter');
 var commentRouter = require('./routes/commentRouter');
 var eventRouter = require('./routes/eventRouter');
 var artRouter = require('./routes/artRouter');
-var societyRouter = require('./routes/societyRouter');
+var pageRouter = require('./routes/pageRouter');
 var uploadRouter = require('./routes/uploadRouter');
 var saveRouter = require('./routes/saveRouter');
 
@@ -63,7 +63,7 @@ app.use('/posts', postRouter);
 app.use('/comments', commentRouter);
 app.use('/events', eventRouter);
 app.use('/arts', artRouter);
-app.use('/societies', societyRouter);
+app.use('/pages', pageRouter);
 app.use('/imageUpload', uploadRouter);
 app.use('/saves', saveRouter);
 

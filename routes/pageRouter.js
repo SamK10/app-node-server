@@ -2,41 +2,41 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var authenticate = require('../authenticate');
-const cors = require('./cors');
+var cors = require('./cors');
 
-var Societies = require('../models/societies');
+var Pages = require('../models/pages');
 
-var societyRouter = express.Router();
+var pageRouter = express.Router();
 
-societyRouter.use(bodyParser.json());
+pageRouter.use(bodyParser.json());
 
-societyRouter.route('/')
+pageRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
     .get(cors.cors, (req, res, next) => {
-        Societies.find(req.query)
-            .then((societies) => {
+        Pages.find(req.query)
+            .then((pages) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(societies);
+                res.json(pages.sort((a, b) => a.title.localeCompare(b.title)));
             }, (err) => next(err))
             .catch((err) => next(err));
     })
-    .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
-        Societies.create(req.body)
-            .then((society) => {
-                console.log('Society Created ', society);
+    .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+        Pages.create(req.body)
+            .then((page) => {
+                console.log('page Created ', page);
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(society);
+                res.json(page);
             }, (err) => next(err))
             .catch((err) => next(err));
     })
-    .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+    .put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
         res.statusCode = 403;
-        res.end('PUT operation not supported on /societies');
+        res.end('PUT operation not supported on /pages');
     })
-    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
-        Societies.remove({})
+    .delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+        Pages.remove({})
             .then((resp) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -45,34 +45,34 @@ societyRouter.route('/')
             .catch((err) => next(err));
     });
 
-societyRouter.route('/:societyId')
+pageRouter.route('/:pageId')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
     .get(cors.cors, (req, res, next) => {
-        Societies.findById(req.params.societyId)
-            .then((society) => {
+        Pages.findById(req.params.pageId)
+            .then((page) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(society);
+                res.json(page);
             }, (err) => next(err))
             .catch((err) => next(err));
     })
-    .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+    .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
         res.statusCode = 403;
-        res.end('POST operation not supported on /societies/' + req.params.societyId);
+        res.end('POST operation not supported on /pages/' + req.params.pageId);
     })
-    .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
-        Societies.findByIdAndUpdate(req.params.societyId, {
+    .put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+        Pages.findByIdAndUpdate(req.params.pageId, {
             $set: req.body
         }, { new: true })
-            .then((society) => {
+            .then((page) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(society);
+                res.json(page);
             }, (err) => next(err))
             .catch((err) => next(err));
     })
-    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
-        Societies.findByIdAndRemove(req.params.societyId)
+    .delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+        Pages.findByIdAndRemove(req.params.pageId)
             .then((resp) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -81,4 +81,4 @@ societyRouter.route('/:societyId')
             .catch((err) => next(err));
     });
 
-module.exports = societyRouter;
+module.exports = pageRouter;

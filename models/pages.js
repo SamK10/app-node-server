@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const societySchema = new Schema({
+const pageSchema = new Schema({
     src: {
         type: String,
         required: true
@@ -14,6 +14,6 @@ const societySchema = new Schema({
     timestamps: true
 });
 
-var Societies = mongoose.model('Society', societySchema);
+var Pages = mongoose.model('Page', pageSchema);
 
-module.exports = Societies;
+module.exports = Pages;
