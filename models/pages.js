@@ -2,9 +2,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const pageSchema = new Schema({
+    cover_url: {
+        type: String,
+        required: false
+    },
     src: {
         type: String,
-        required: true
+        required: false
     },
     title: {
         type: String,

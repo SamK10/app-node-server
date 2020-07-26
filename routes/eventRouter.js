@@ -17,7 +17,7 @@ eventRouter.route('/')
             .then((events) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(events);
+                res.json(events.reverse());
             }, (err) => next(err))
             .catch((err) => next(err));
     })
