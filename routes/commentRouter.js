@@ -18,7 +18,7 @@ commentRouter.route('/')
             .then((comments) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(comments);
+                res.json(comments.reverse());
             }, (err) => next(err))
             .catch((err) => next(err));
     })
