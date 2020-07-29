@@ -35,13 +35,13 @@ pageRouter.route('/')
                         res.json(page);
                     })
             }, (err) => next(err))
-                .catch((err) => next(err));
+            .catch((err) => next(err));
     })
     .put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
         res.statusCode = 403;
         res.end('PUT operation not supported on /pages');
     })
-    .delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         Pages.remove({})
             .then((resp) => {
                 res.statusCode = 200;
