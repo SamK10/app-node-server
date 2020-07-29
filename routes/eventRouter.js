@@ -14,6 +14,7 @@ eventRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
     .get(cors.cors, (req, res, next) => {
         Events.find(req.query)
+            .populate('owner')
             .then((events) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -22,12 +23,17 @@ eventRouter.route('/')
             .catch((err) => next(err));
     })
     .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+        req.body.owner = req.user._id;
         Events.create(req.body)
             .then((event) => {
-                console.log('Event Created ', event);
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(event);
+                Events.findById(event._id)
+                    .populate('owner')
+                    .then((event) => {
+                        console.log('Event Created ', event);
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.json(event);
+                    })
             }, (err) => next(err))
             .catch((err) => next(err));
     })
@@ -49,6 +55,7 @@ eventRouter.route('/:eventId')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
     .get(cors.cors, (req, res, next) => {
         Events.findById(req.params.eventId)
+            .populate('owner')
             .then((event) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -64,6 +71,7 @@ eventRouter.route('/:eventId')
         Events.findByIdAndUpdate(req.params.eventId, {
             $set: req.body
         }, { new: true })
+            .populate('owner')
             .then((event) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
