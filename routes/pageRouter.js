@@ -14,11 +14,12 @@ pageRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
     .get(cors.cors, (req, res, next) => {
         Pages.find(req.query)
+            .sort({ title: 1 })
             .populate('owner')
             .then((pages) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(pages.sort((a, b) => a.title.localeCompare(b.title)));
+                res.json(pages);
             }, (err) => next(err))
             .catch((err) => next(err));
     })

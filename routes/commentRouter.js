@@ -13,12 +13,15 @@ commentRouter.use(bodyParser.json());
 commentRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
     .get(cors.cors, (req, res, next) => {
-        Comments.find(req.query)
+        Comments.find({})
+            .sort({ createdAt: -1 })
+            .skip(parseInt(req.query.offset))
+            .limit(parseInt(req.query.limit))
             .populate('author')
             .then((comments) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(comments.reverse());
+                res.json(comments);
             }, (err) => next(err))
             .catch((err) => next(err));
     })
